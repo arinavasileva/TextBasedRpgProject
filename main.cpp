@@ -92,17 +92,65 @@ void Combat() {
 
 		//Attack
 		if (playerAttack == 1) {
-			std::cout << "Attacking...You did "
+			std::cout << "Attacking...You did " << playerDamage << " to the " << currentghost << std::endl;
+			ghostHp = ghostHp - playerDamage;
+			Sleep(1000);
+			CombatHUD();
+			if (ghostHp >= 1) {
+				std::cout << "Ghost is Attacking you...\n";
+				totalHealth = totalHealth - ghostAttack;
+				std::cout << "You suffered " << ghostAttack << " hp " << totalHealth << std::endl;
+				//change to function
+				if (totalHealth <= 0) {
+					totalHealth = 0;
+				}
+			}
+			else if (ghostHp <= 0) {
+				ghostHp = 0;
+			}
+			Sleep(1000);
+			Combat();
 
 		}
 		//Block
 		else if (playerAttack == 2) {
-
+			std::cout << "Blocking\n";
+			int i = rand() % 100 + 1;
+			if (i >= 50) {
+				std::cout << "You blocked the incoming attack\n";
+				heal = level * 10 / 2;
+				std::cout << "You have been healed for " << heal << std::endl;
+				totalHealth += heal;
+				Sleep(1000);
+				Combat();
+			}
+			else {
+				std::cout << "You failed to block the upcoming attack\n";
+				totalHealth -= ghostAttack;
+				std::cout << "The ghost put a magic curse on you " << ghostAttack << " current hp " << totalHealth << std::endl;
+				Sleep(1000);
+				Combat();
+			}
 		}
+
 		//Run
 		else if (playerAttack == 3) {
-
+			std::cout << "You are trying to escape\n";
+			int x = rand() % 100 + 1;
+			if (x >= 50) {
+				std::cout << "You ran away\n";
+				HUD();
+			}
+			else {
+				std::cout << "You failed to escape\n";
+				std::cout << "Ghost is attacking you!\n";
+				totalHealth -= ghostAttack + 10;
+				std::cout << "You suffered " << ghostAttack + 10 << "Your current helath is " << totalHealth << std::endl;
+				Sleep(1000);
+				Combat();
+			}
 		}
+		
 		else {
 			std::cout << "Invalid Input\n";
 			Sleep(700);
@@ -210,7 +258,7 @@ void Moving() {
 			totalHealth += 10 * level;
 		}
 		std::cout << "You healed by resting. Your health is now" << totalHealth << std::endl;
-		sleep(1000);
+		Sleep(1000);
 		HUD();
 
 	}
