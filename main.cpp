@@ -17,12 +17,12 @@ int ghostLevel = 0;
 
 std::string ghostName[] = { "Ghastly Gale", "Soul Shroud", "Wandering Wight" }; // subject to change
 int currentGhostNames = 2;
-std::string currentghost = "";
+std::string currentghost = " ";
 
 int main() {
 	level = 1;
 	xp = 0;
-	nextLevel = 10;
+	nextLevel = 76;
 	health = 100;
 	totalHealth = health;
 	maxHealth = totalHealth;
@@ -63,15 +63,15 @@ void HUD() {
 	Sleep(500);
 	system("cls");
 	std::cout << "Name: " << name << "      Health:  " << totalHealth << "\nRace:  " << race
-		<< "\nSex: " << sex << "\nLevel: " << xp << "\nXP: " << xp << "\nXP to Level: " << nextLevel << std::endl;
+		<< "\nSex: " << sex << "\nLevel: " << level << "\nXP: " << xp << "\nXP to Level: " << nextLevel << std::endl;
 	Moving();
 }
 
 void CombatHUD() {
 	Sleep(500);
 	system("cls");
-	std::cout << "Name: " << name << "		|		Ghost Name:  " << currentghost << "\nHealth:  " << totalHealth
-		<< "		|		Ghost Health: " << ghostHp << "\nLevel: " << level << "		|		Ghost Level: " << ghostLevel << std::endl;
+	std::cout << "Name: " << name << "		| Ghost Name: " << currentghost << "\nHealth:  " << totalHealth << "	| Ghost Health: " <<
+		ghostHp << "\nLevel: " << level << "	| Ghost Level: " << ghostLevel << std::endl;
 	Moving();
 }
 
@@ -82,8 +82,8 @@ void Combat() {
 	int playerDamage = 8 * level / 2;
 	int ghostAttack = 6 * ghostLevel / 2;
 
-	if (totalHealth >= 1 && ghostHp >= 1) {
-		//std::cout << "Talk\n"; need to figure out how to ask a monster to tell a riddle
+	if (totalHealth >= 1 && ghostHp >= 1) {	
+		std::cout << "\n";
 		std::cout << "1.Attack\n";
 		std::cout << "2.Block\n";
 		std::cout << "3.Run\n";
@@ -97,6 +97,7 @@ void Combat() {
 			Sleep(1000);
 			CombatHUD();
 			if (ghostHp >= 1) {
+				std::cout << "\n";
 				std::cout << "Ghost is Attacking you...\n";
 				totalHealth = totalHealth - ghostAttack;
 				std::cout << "You suffered " << ghostAttack << " hp " << totalHealth << std::endl;
@@ -150,7 +151,7 @@ void Combat() {
 				Combat();
 			}
 		}
-		
+
 		else {
 			std::cout << "Invalid Input\n";
 			Sleep(700);
@@ -181,7 +182,7 @@ void Moving() {
 			// Encounter a Ghost
 			CreateGhost();
 			std::string tempName = ghostName[rand() % currentGhostNames];
-			std::cout << "A" << tempName << "! Prepare to fight!\n";
+			std::cout << "A " << tempName << "! Prepare to fight!\n";
 			currentghost = tempName;
 			Sleep(1000);
 			Combat();
@@ -200,11 +201,10 @@ void Moving() {
 			// Encounter a Ghost
 			CreateGhost();
 			std::string tempName = ghostName[rand() % currentGhostNames];
-			std::cout << "A" << tempName << "! Prepare to fight!\n";
+			std::cout << "A " << tempName << "! Prepare to fight!\n";
 			currentghost = tempName;
 			Sleep(1000);
 			Combat();
-
 		}
 
 		std::cout << "You found nothing\n";
@@ -219,11 +219,10 @@ void Moving() {
 			// Encounter a Ghost
 			CreateGhost();
 			std::string tempName = ghostName[rand() % currentGhostNames];
-			std::cout << "A" << tempName << "! Prepare to fight!\n";
+			std::cout << "A " << tempName << "! Prepare to fight!\n";
 			currentghost = tempName;
 			Sleep(1000);
 			Combat();
-
 		}
 
 		std::cout << "You found nothing\n";
@@ -239,11 +238,10 @@ void Moving() {
 			// Encounter a Ghost
 			CreateGhost();
 			std::string tempName = ghostName[rand() % currentGhostNames];
-			std::cout << "A" << tempName << "! Prepare to fight!\n";
+			std::cout << "A " << tempName << "! Prepare to fight!\n";
 			currentghost = tempName;
 			Sleep(1000);
 			Combat();
-
 		}
 
 		std::cout << "You found nothing\n";
@@ -252,15 +250,13 @@ void Moving() {
 
 	}
 	else if (choice == 5) {
-
 		std::cout << "It is time to rest in the closest corner\n";
-		if (totalHealth <= 99){
+		if (totalHealth <= 99) {
 			totalHealth += 10 * level;
 		}
-		std::cout << "You healed by resting. Your health is now" << totalHealth << std::endl;
-		Sleep(1000);
+		std::cout << "You healed by resting. Your health is now " << totalHealth << std::endl;
+		Sleep(2000);
 		HUD();
-
 	}
 	else {
 		std::cout << "Invalid Input\n";
@@ -292,3 +288,4 @@ void CreateGhost() {
 	if (ghostLevel == 0)
 		CreateGhost();
 }
+
