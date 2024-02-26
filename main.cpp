@@ -267,8 +267,8 @@ void Moving() {
 
 void CreateGhost() {
 
-	int ghostHp = 30;
-	int ghostLevel = (rand() % 3) + level;
+	ghostHp = 30;
+	ghostLevel = (rand() % 3) + level;
 
 	//if (ghostLevel == 0) {
 	//	ghostLevel = (rand() % 3) + level;
