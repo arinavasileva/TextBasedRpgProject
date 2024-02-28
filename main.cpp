@@ -8,6 +8,7 @@ void Combat();
 void CombatHUD();
 void Moving();
 void CreateGhost();
+void LevelUp();
 
 std::string name = "", race = "", sex = "";
 int level = 0, xp = 0, health = 0, totalHealth = 0, maxHealth = 0, nextLevel, heal = 0;
@@ -72,14 +73,15 @@ void CombatHUD() {
 	system("cls");
 	std::cout << "Name: " << name << "		| Ghost Name: " << currentghost << "\nHealth:  " << totalHealth << "	| Ghost Health: " <<
 		ghostHp << "\nLevel: " << level << "	| Ghost Level: " << ghostLevel << std::endl;
-	Moving();
+	
 }
 
 void Combat() {
 
 	CombatHUD();
 	int playerAttack;
-	int playerDamage = 8 * level / 2;
+	//int playerDamage = 8 * level / 2;
+	int playerDamage = 3000;
 	int ghostAttack = 6 * ghostLevel / 2;
 
 	if (totalHealth >= 1 && ghostHp >= 1) {	
@@ -100,16 +102,27 @@ void Combat() {
 				std::cout << "\n";
 				std::cout << "Ghost is Attacking you...\n";
 				totalHealth = totalHealth - ghostAttack;
-				std::cout << "You suffered " << ghostAttack << " hp " << totalHealth << std::endl;
+				std::cout << "You suffered (-" << ghostAttack << " points) " << totalHealth << std::endl;
 				//change to function
 				if (totalHealth <= 0) {
-					totalHealth = 0;
+					totalHealth = 0; 
+					system("cls");
+					std::cout << "You died\nYou were level: " << level << "you got killed by" << currentghost << std::endl;
+					Sleep(2000);
+					exit(0);
+
 				}
 			}
 			else if (ghostHp <= 0) {
 				ghostHp = 0;
-			}
-			Sleep(1000);
+		
+				LevelUp();
+				std::cout << "\n";
+				std::cout << "You defeated " << currentghost << ". You have been rewarded with " << ghostXp << "XP.\nGood job!";
+				Sleep(3000);
+				HUD();
+			} 
+			Sleep(3000);
 			Combat();
 
 		}
@@ -120,36 +133,44 @@ void Combat() {
 			if (i >= 50) {
 				std::cout << "You blocked the incoming attack\n";
 				heal = level * 10 / 2;
-				std::cout << "You have been healed for " << heal << std::endl;
+				std::cout << "You have been healed (+ " << heal << " points)" << std::endl;
 				totalHealth += heal;
-				Sleep(1000);
+				Sleep(3000);
 				Combat();
 			}
 			else {
 				std::cout << "You failed to block the upcoming attack\n";
 				totalHealth -= ghostAttack;
-				std::cout << "The ghost put a magic curse on you " << ghostAttack << " current hp " << totalHealth << std::endl;
-				Sleep(1000);
+				std::cout << "The ghost put a magic curse on you! (- " << ghostAttack << " points). Current hp now is " << totalHealth << std::endl;
+				Sleep(3000);
 				Combat();
 			}
 		}
 
 		//Run
 		else if (playerAttack == 3) {
-			std::cout << "You are trying to escape\n";
+			std::cout << "You are trying to escape...\n";
 			int x = rand() % 100 + 1;
 			if (x >= 50) {
-				std::cout << "You ran away\n";
+				std::cout << "You ran away!\n";
 				HUD();
 			}
 			else {
-				std::cout << "You failed to escape\n";
+				std::cout << "You failed to escape!\n";
 				std::cout << "Ghost is attacking you!\n";
 				totalHealth -= ghostAttack + 10;
-				std::cout << "You suffered " << ghostAttack + 10 << "Your current helath is " << totalHealth << std::endl;
-				Sleep(1000);
+				std::cout << "You suffered (- " << ghostAttack + 10 << " points). Your current health is " << totalHealth << std::endl;
+				Sleep(5000);
 				Combat();
 			}
+		}
+
+		if (totalHealth <= 1) {
+			system("cls");
+			std::cout << "You died\nYou were level: " << level << ". You got killed by" << currentghost << std::endl;
+			Sleep(3000);
+			exit(0);
+
 		}
 
 		else {
@@ -159,7 +180,14 @@ void Combat() {
 		}
 
 	}
-
+	if (ghostHp <= 1) {
+		HUD();
+		LevelUp();
+		std::cout << "\n";
+		std::cout << "You defeated " << currentghost << ". You have been rewarded with " << ghostXp << " XP.\nGood job!";
+		Sleep(3000);
+	}
+	
 }
 
 void Moving() {
@@ -250,7 +278,7 @@ void Moving() {
 
 	}
 	else if (choice == 5) {
-		std::cout << "It is time to rest in the closest corner\n";
+		std::cout << "It is time to rest in the closest corner.\n";
 		if (totalHealth <= 99) {
 			totalHealth += 10 * level;
 		}
@@ -265,21 +293,31 @@ void Moving() {
 	}
 }
 
+void LevelUp() {
+	xp = xp + ghostXp;
+
+	if (xp >= nextLevel) {
+		level++;
+		nextLevel = nextLevel * 3 / 2;
+		totalHealth = totalHealth + 20;
+		maxHealth = totalHealth;
+		std::cout << "Level Up! You are now level " << level << std::endl;
+		std::cout << "Your total health increased by 20 points. Total health now is " << totalHealth << std::endl;
+		Sleep(1500);
+		HUD();
+	}
+}
+
 void CreateGhost() {
 
 	ghostHp = 30;
 	ghostLevel = (rand() % 3) + level;
 
-	//if (ghostLevel == 0) {
-	//	ghostLevel = (rand() % 3) + level;
-	//}
 
 	// The value will be modified later 
-	ghostHp = (rand() % 30) * totalHealth;
+	ghostHp = (rand() % 30) * ghostLevel;
 
-	//if (ghostHp == 0) {
-	//	ghostHP = = (rand() % 30) * totalHealth;
-	//}
+	
 
 	ghostXp = ghostHp;
 
