@@ -85,6 +85,10 @@ int main() {
 		system("cls");
 	}
 
+	name[0] = toupper(name[0]);
+	race[0] = toupper(race[0]);
+	sex[0] = toupper(sex[0]);
+
 	//health = 100;
 	totalHealth = health;
 	maxHealth = totalHealth;
