@@ -2,6 +2,8 @@
 #include <windows.h>
 #include <string>
 
+#include<algorithm>
+
 
 void HUD();
 void Combat();
@@ -16,40 +18,76 @@ int ghostHp = 0;
 int ghostXp = 0;
 int ghostLevel = 0;
 
-std::string ghostName[] = { "Ghastly Gale", "Soul Shroud", "Wandering Wight" }; // subject to change
-int currentGhostNames = 2;
+std::string ghostName[] = { "Spirit of Shadows", "Evil Echo", "Phantom", "Witch", "Demon"}; // subject to change
+int currentGhostNames = 4;
 std::string currentghost = " ";
+int counter = 3;
+std::string playerRace[] = { "elf", "dwarf", "goblin", "human" };
 
 int main() {
 	level = 1;
 	xp = 0;
 	nextLevel = 76;
-	health = 100;
-	totalHealth = health;
-	maxHealth = totalHealth;
 
 	// character creation 
 
 	std::cout << "Enter Character's Name: ";
 	std::cin >> name;
 
-	std::cout << "Enter Character's Race: ";
+	std::cout << "Enter Character's race\n";
+	std::cout << "Elf\n";
+	std::cout << "Dwarf\n";
+	std::cout << "Goblin\n";
+	std::cout << "Human\n";
+	std::cout << "Type your race below: \n\n";
 	std::cin >> race;
 
+	std::for_each(race.begin(), race.end(), [](char& c) {
+		c = ::tolower(c);
+		});
+
+	for (int i = 0; 1 < sizeof(playerRace); i++) {
+		if (race == "elf") {
+			health = 80;
+			break;
+		}
+		if (race == "dwarf") {
+			health = 120;
+			break;
+		}
+		if (race == "goblin") {
+			health = 110;
+			break;
+		}
+		if (race == "human") {
+			health = 90;
+			break;
+		}
+		else {
+			health = 100;
+			break;
+		}
+	}
+
+	std::cout << "\n";
 	std::cout << "Enter Character's Sex: ";
 	std::cin >> sex;
 
-	std::cout << "Character Creation is in Progress.\n ";
-	Sleep(1000);
-	system("cls");
+	for (int i = 0; i < counter; i++) {
+		if (i == 0)
+			std::cout << "Character Creation is in Progress.\n ";
+		if (i == 1)
+			std::cout << "Character Creation is in Progress..\n ";
+		if (i == 2)
+			std::cout << "Character Creation is in Progress...\n ";
 
-	std::cout << "Character Creation is in Progress..\n ";
-	Sleep(1500);
-	system("cls");
+		Sleep(1000);
+		system("cls");
+	}
 
-	std::cout << "Character Creation is in Progress...\n ";
-	Sleep(1900);
-	system("cls");
+	//health = 100;
+	totalHealth = health;
+	maxHealth = totalHealth;
 
 	HUD();
 	Moving();
@@ -63,7 +101,7 @@ int main() {
 void HUD() {
 	Sleep(500);
 	system("cls");
-	std::cout << "Name: " << name << "      Health:  " << totalHealth << "\nRace:  " << race
+	std::cout << "Name: " << name << "      Health: " << totalHealth << "\nRace: " << race
 		<< "\nSex: " << sex << "\nLevel: " << level << "\nXP: " << xp << "\nXP to Level: " << nextLevel << std::endl;
 	Moving();
 }
