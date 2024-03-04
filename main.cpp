@@ -1,9 +1,9 @@
 #include <iostream>
 #include <windows.h>
 #include <string>
-
-#include<algorithm>
-
+#include <algorithm>
+#include <vector>
+#include <map>
 
 void HUD();
 void Combat();
@@ -14,20 +14,21 @@ void LevelUp();
 
 std::string name = "", race = "", sex = "";
 int level = 0, xp = 0, health = 0, totalHealth = 0, maxHealth = 0, nextLevel, heal = 0;
+std::string currentGhost;
 int ghostHp = 0;
 int ghostXp = 0;
 int ghostLevel = 0;
 
-std::string ghostName[] = { "Spirit of Shadows", "Evil Echo", "Phantom", "Witch", "Demon"}; // subject to change
-int currentGhostNames = 4;
-std::string currentghost = " ";
-int counter = 3;
-std::string playerRace[] = { "elf", "dwarf", "goblin", "human" };
+std::vector<std::string> playerRace = { "elf", "dwarf", "goblin", "human" };
+std::vector<std::string> ghostNames = { "Spirit of Shadows", "Evil Echo", "Phantom", "Witch", "Demon"};
+std::map<std::string, int> ghostHPs = { {"Spirit of Shadows", 30}, {"Evil Echo", 35}, {"Phantom", 40}, {"Witch", 45}, {"Demon", 50} };
 
 int main() {
 	level = 1;
 	xp = 0;
 	nextLevel = 76;
+
+	srand(time(NULL));
 
 	// character creation 
 
@@ -35,36 +36,29 @@ int main() {
 	std::cin >> name;
 
 	std::cout << "Enter Character's race\n";
-	std::cout << "Elf\n";
-	std::cout << "Dwarf\n";
-	std::cout << "Goblin\n";
-	std::cout << "Human\n";
+	for (const auto& raceOption : playerRace) {
+		std::cout << raceOption << "\n";
+	}
 	std::cout << "Type your race below: \n\n";
 	std::cin >> race;
 
-	std::for_each(race.begin(), race.end(), [](char& c) {
-		c = ::tolower(c);
-		});
+	std::transform(race.begin(), race.end(), race.begin(), ::tolower);
 
-	for (int i = 0; 1 < sizeof(playerRace); i++) {
-		if (race == "elf") {
+	health = 100; // Default health value
+	auto it = std::find(playerRace.begin(), playerRace.end(), race);
+	if (it != playerRace.end()) {
+		switch (it - playerRace.begin()) {
+		case 0:
 			health = 80;
 			break;
-		}
-		if (race == "dwarf") {
+		case 1:
 			health = 120;
 			break;
-		}
-		if (race == "goblin") {
+		case 2:
 			health = 110;
 			break;
-		}
-		if (race == "human") {
+		case 3:
 			health = 90;
-			break;
-		}
-		else {
-			health = 100;
 			break;
 		}
 	}
@@ -73,7 +67,7 @@ int main() {
 	std::cout << "Enter Character's Sex: ";
 	std::cin >> sex;
 
-	for (int i = 0; i < counter; i++) {
+	for (int i = 0; i < 3; i++) {
 		if (i == 0)
 			std::cout << "Character Creation is in Progress.\n ";
 		if (i == 1)
@@ -113,7 +107,7 @@ void HUD() {
 void CombatHUD() {
 	Sleep(500);
 	system("cls");
-	std::cout << "Name: " << name << "		| Ghost Name: " << currentghost << "\nHealth:  " << totalHealth << "	| Ghost Health: " <<
+	std::cout << "Name: " << name << "		| Ghost Name: " << currentGhost << "\nHealth:  " << totalHealth << "	| Ghost Health: " <<
 		ghostHp << "\nLevel: " << level << "	| Ghost Level: " << ghostLevel << std::endl;
 	
 }
@@ -136,7 +130,7 @@ void Combat() {
 
 		//Attack
 		if (playerAttack == 1) {
-			std::cout << "Attacking...You did " << playerDamage << " to the " << currentghost << std::endl;
+			std::cout << "Attacking...You did " << playerDamage << " to the " << currentGhost << std::endl;
 			ghostHp = ghostHp - playerDamage;
 			Sleep(1000);
 			CombatHUD();
@@ -149,7 +143,7 @@ void Combat() {
 				if (totalHealth <= 0) {
 					totalHealth = 0; 
 					system("cls");
-					std::cout << "You died\nYou were level: " << level << "you got killed by" << currentghost << std::endl;
+					std::cout << "You died\nYou were level: " << level << "you got killed by" << currentGhost << std::endl;
 					Sleep(2000);
 					exit(0);
 
@@ -160,7 +154,7 @@ void Combat() {
 		
 				LevelUp();
 				std::cout << "\n";
-				std::cout << "You defeated " << currentghost << ". You have been rewarded with " << ghostXp << "XP.\nGood job!";
+				std::cout << "You defeated " << currentGhost << ". You have been rewarded with " << ghostXp << "XP.\nGood job!";
 				Sleep(3000);
 				HUD();
 			} 
@@ -209,7 +203,7 @@ void Combat() {
 
 		if (totalHealth <= 1) {
 			system("cls");
-			std::cout << "You died\nYou were level: " << level << ". You got killed by" << currentghost << std::endl;
+			std::cout << "You died\nYou were level: " << level << ". You got killed by" << currentGhost << std::endl;
 			Sleep(3000);
 			exit(0);
 
@@ -226,7 +220,7 @@ void Combat() {
 		HUD();
 		LevelUp();
 		std::cout << "\n";
-		std::cout << "You defeated " << currentghost << ". You have been rewarded with " << ghostXp << " XP.\nGood job!";
+		std::cout << "You defeated " << currentGhost << ". You have been rewarded with " << ghostXp << " XP.\nGood job!";
 		Sleep(3000);
 	}
 	
@@ -251,9 +245,7 @@ void Moving() {
 		if (temp >= 50) {
 			// Encounter a Ghost
 			CreateGhost();
-			std::string tempName = ghostName[rand() % currentGhostNames];
-			std::cout << "A " << tempName << "! Prepare to fight!\n";
-			currentghost = tempName;
+			std::cout << "A " << currentGhost << "! Prepare to fight!\n";
 			Sleep(1000);
 			Combat();
 
@@ -270,9 +262,7 @@ void Moving() {
 		if (temp >= 50) {
 			// Encounter a Ghost
 			CreateGhost();
-			std::string tempName = ghostName[rand() % currentGhostNames];
-			std::cout << "A " << tempName << "! Prepare to fight!\n";
-			currentghost = tempName;
+			std::cout << "A " << currentGhost << "! Prepare to fight!\n";
 			Sleep(1000);
 			Combat();
 		}
@@ -288,9 +278,7 @@ void Moving() {
 		if (temp >= 50) {
 			// Encounter a Ghost
 			CreateGhost();
-			std::string tempName = ghostName[rand() % currentGhostNames];
-			std::cout << "A " << tempName << "! Prepare to fight!\n";
-			currentghost = tempName;
+			std::cout << "A " << currentGhost << "! Prepare to fight!\n";
 			Sleep(1000);
 			Combat();
 		}
@@ -307,9 +295,7 @@ void Moving() {
 		if (temp >= 50) {
 			// Encounter a Ghost
 			CreateGhost();
-			std::string tempName = ghostName[rand() % currentGhostNames];
-			std::cout << "A " << tempName << "! Prepare to fight!\n";
-			currentghost = tempName;
+			std::cout << "A " << currentGhost << "! Prepare to fight!\n";
 			Sleep(1000);
 			Combat();
 		}
@@ -351,15 +337,11 @@ void LevelUp() {
 }
 
 void CreateGhost() {
+	int ghost = rand() % 5;
+	currentGhost = ghostNames[ghost];
 
-	ghostHp = 30;
 	ghostLevel = (rand() % 3) + level;
-
-
-	// The value will be modified later 
-	ghostHp = (rand() % 30) * ghostLevel;
-
-	
+	ghostHp = ghostHPs[currentGhost]+ (rand() % 4+1)*ghostLevel;
 
 	ghostXp = ghostHp;
 
