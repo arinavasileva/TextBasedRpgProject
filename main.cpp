@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <vector>
 #include <map>
+#include "Inventory.h"
 
 void HUD();
 void Combat();
@@ -11,6 +12,7 @@ void CombatHUD();
 void Moving();
 void CreateGhost();
 void LevelUp();
+void InventoryHUD();
 
 std::string name = "", race = "", sex = "";
 int level = 0, xp = 0, health = 0, totalHealth = 0, maxHealth = 0, nextLevel, heal = 0;
@@ -18,6 +20,7 @@ std::string currentGhost;
 int ghostHp = 0;
 int ghostXp = 0;
 int ghostLevel = 0;
+Inventory inventory;
 
 std::vector<std::string> playerRace = { "elf", "dwarf", "goblin", "human" };
 std::vector<std::string> ghostNames = { "Spirit of Shadows", "Evil Echo", "Phantom", "Witch", "Demon"};
@@ -87,6 +90,9 @@ int main() {
 	totalHealth = health;
 	maxHealth = totalHealth;
 
+	inventory.addItem("Sword");
+	inventory.addItem("Leather Boots");
+	
 	HUD();
 	Moving();
 
@@ -101,6 +107,7 @@ void HUD() {
 	system("cls");
 	std::cout << "Name: " << name << "      Health: " << totalHealth << "\nRace: " << race
 		<< "\nSex: " << sex << "\nLevel: " << level << "\nXP: " << xp << "\nXP to Level: " << nextLevel << std::endl;
+	InventoryHUD();
 	Moving();
 }
 
@@ -109,7 +116,7 @@ void CombatHUD() {
 	system("cls");
 	std::cout << "Name: " << name << "		| Ghost Name: " << currentGhost << "\nHealth:  " << totalHealth << "	| Ghost Health: " <<
 		ghostHp << "\nLevel: " << level << "	| Ghost Level: " << ghostLevel << std::endl;
-	
+	//InventoryHUD();
 }
 
 void Combat() {
@@ -351,3 +358,7 @@ void CreateGhost() {
 		CreateGhost();
 }
 
+void InventoryHUD() {
+
+	inventory.showInventory();
+}

@@ -1,0 +1,39 @@
+{
+  "ghosts": [
+    {
+      "name": "Spirit of Shadows",
+      "health": 30,
+      "damage": 10,
+      "defense": 5,
+      "dialogue": "Hey there, you lost soul. It’s dangerous around here. You must to find a key to get out of here."
+    },
+    {
+      "name": "Evil Echo",
+      "health": 35,
+      "damage": 15,
+      "defense": 8,
+      "dialogue": "Your footsteps echo through these empty halls, a prelude to your inevitable demise."
+    },
+    {
+      "name": "Phantom",
+      "health": 40,
+      "damage": 8,
+      "defense": 2,
+      "dialogue": "You'll join us in eternal darkness!"
+    },
+    {
+      "name": "Witch",
+      "health": 30,
+      "damage": 8,
+      "defense": 2,
+      "dialogue": "The spirits of this house hunger for company, but they crave souls, not flesh."
+    },
+    {
+      "name": "Demon",
+      "health": 50,
+      "damage": 10,
+      "defense": 3,
+      "dialogue": "You dare to disturb the slumber of the damned? Prepare to face the consequences, mortal."
+    }
+  ]
+}
