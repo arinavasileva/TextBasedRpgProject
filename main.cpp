@@ -364,5 +364,32 @@ void InventoryHUD() {
 	inventory.showInventory();
 	inventory.removeItem("Key");
 	inventory.showInventory();
-	Sleep(1000);
+	Sleep(2000);
 }
+
+void CreateGhost() {
+	// Open the JSON file
+	std::ifstream file("ghosts.json");
+	Json::Value root;
+	file >> root;
+
+	// Accessing the array of ghosts
+	Json::Value ghosts = root["ghosts"];
+
+	// Choosing a random ghost
+	int numGhosts = ghosts.size();
+	int randomIndex = rand() % numGhosts;
+	Json::Value ghost = ghosts[randomIndex];
+
+	// Extracting ghost data
+	currentGhost = ghost["name"].asString();
+	ghostLevel = ghost["level"].asInt();
+	ghostHp = ghost["health"].asInt();
+	ghostXp = ghost["xp"].asInt();
+
+	// Checking if ghost data is valid
+	if (ghostHp <= 0 || ghostLevel <= 0) {
+		CreateGhost(); // If invalid, try again
+	}
+}
+
