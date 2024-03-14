@@ -90,8 +90,9 @@ int main() {
 	totalHealth = health;
 	maxHealth = totalHealth;
 
-	InventoryHUD();
-
+	inventory.addItem("Sword");
+	inventory.addItem("Leather Boots");
+	
 	HUD();
 	Moving();
 
@@ -106,6 +107,7 @@ void HUD() {
 	system("cls");
 	std::cout << "Name: " << name << "      Health: " << totalHealth << "\nRace: " << race
 		<< "\nSex: " << sex << "\nLevel: " << level << "\nXP: " << xp << "\nXP to Level: " << nextLevel << std::endl;
+	InventoryHUD();
 	Moving();
 }
 
@@ -114,7 +116,7 @@ void CombatHUD() {
 	system("cls");
 	std::cout << "Name: " << name << "		| Ghost Name: " << currentGhost << "\nHealth:  " << totalHealth << "	| Ghost Health: " <<
 		ghostHp << "\nLevel: " << level << "	| Ghost Level: " << ghostLevel << std::endl;
-	
+	//InventoryHUD();
 }
 
 void Combat() {
@@ -357,39 +359,6 @@ void CreateGhost() {
 }
 
 void InventoryHUD() {
-	inventory.addItem("Sword");
-	inventory.addItem("Key");
+
 	inventory.showInventory();
-	inventory.addItem("Tome");
-	inventory.showInventory();
-	inventory.removeItem("Key");
-	inventory.showInventory();
-	Sleep(2000);
 }
-
-void CreateGhost() {
-	// Open the JSON file
-	std::ifstream file("ghosts.json");
-	Json::Value root;
-	file >> root;
-
-	// Accessing the array of ghosts
-	Json::Value ghosts = root["ghosts"];
-
-	// Choosing a random ghost
-	int numGhosts = ghosts.size();
-	int randomIndex = rand() % numGhosts;
-	Json::Value ghost = ghosts[randomIndex];
-
-	// Extracting ghost data
-	currentGhost = ghost["name"].asString();
-	ghostLevel = ghost["level"].asInt();
-	ghostHp = ghost["health"].asInt();
-	ghostXp = ghost["xp"].asInt();
-
-	// Checking if ghost data is valid
-	if (ghostHp <= 0 || ghostLevel <= 0) {
-		CreateGhost(); // If invalid, try again
-	}
-}
-
