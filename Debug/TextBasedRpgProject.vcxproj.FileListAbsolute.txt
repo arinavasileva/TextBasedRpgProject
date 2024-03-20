@@ -1,2 +1,0 @@
-C:\Users\arinava\source\repos\TextBasedRpgProject\TextBasedRpgProject\Debug\TextBasedRpgProject.exe
-C:\Users\immir\OneDrive\Tiedostot\GitHub\TextBasedRpgProject\Debug\TextBasedRpgProject.exe
