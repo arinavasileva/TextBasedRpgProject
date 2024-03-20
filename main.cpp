@@ -1,9 +1,12 @@
 #include <iostream>
+#include <fstream>
+#include <sstream>
 #include <windows.h>
 #include <string>
 #include <algorithm>
 #include <vector>
 #include <map>
+#include "struct_mapping/struct_mapping.h"
 #include "Inventory.h"
 
 void HUD();
@@ -13,18 +16,32 @@ void Moving();
 void CreateGhost();
 void LevelUp();
 void InventoryHUD();
+void LoadGhosts();
 
-std::string name = "", race = "", sex = "";
-int level = 0, xp = 0, health = 0, totalHealth = 0, maxHealth = 0, nextLevel, heal = 0;
+struct Ghost
+{
+	std::string name;
+	int health;
+	int damage;
+	std::string dialogue;
+};
+
+struct GhostsData
+{
+	std::vector<Ghost> ghosts;
+};
+
+std::vector<Ghost> ghosts;
 std::string currentGhost;
 int ghostHp = 0;
 int ghostXp = 0;
 int ghostLevel = 0;
+
+std::string name = "", race = "", sex = "";
+int level = 0, xp = 0, health = 0, totalHealth = 0, maxHealth = 0, nextLevel, heal = 0;
 Inventory inventory;
 
-std::vector<std::string> playerRace = { "elf", "dwarf", "goblin", "human" };
-std::vector<std::string> ghostNames = { "Spirit of Shadows", "Evil Echo", "Phantom", "Witch", "Demon"};
-std::map<std::string, int> ghostHPs = { {"Spirit of Shadows", 30}, {"Evil Echo", 35}, {"Phantom", 40}, {"Witch", 45}, {"Demon", 50} };
+std::vector<std::string> playerRace = { "elf", "dwarf", "goblin", "human" }; 
 
 int main() {
 	level = 1;
@@ -32,6 +49,8 @@ int main() {
 	nextLevel = 76;
 
 	srand(time(NULL));
+
+	LoadGhosts();
 
 	// character creation 
 
@@ -100,6 +119,26 @@ int main() {
 
 	return 0;
 
+}
+
+void LoadGhosts() {
+	struct_mapping::reg(&Ghost::name, "name");
+	struct_mapping::reg(&Ghost::health, "health");
+	struct_mapping::reg(&Ghost::damage, "damage");
+	struct_mapping::reg(&Ghost::dialogue, "dialogue");
+	struct_mapping::reg(&GhostsData::ghosts, "ghosts");
+
+	std::ifstream json_data("ghosts.json");
+
+	if (json_data)
+	{
+		GhostsData data;
+
+		struct_mapping::map_json_to_struct(data, json_data);
+		ghosts = data.ghosts;
+
+		json_data.close();
+	}
 }
 
 void HUD() {
@@ -344,18 +383,13 @@ void LevelUp() {
 }
 
 void CreateGhost() {
-	int ghost = rand() % 5;
-	currentGhost = ghostNames[ghost];
+	int ghostId = rand() % ghosts.size();
+	Ghost ghost = ghosts[ghostId];
 
+	currentGhost = ghost.name;
 	ghostLevel = (rand() % 3) + level;
-	ghostHp = ghostHPs[currentGhost]+ (rand() % 4+1)*ghostLevel;
-
-	ghostXp = ghostHp;
-
-	if (ghostHp == 0)
-		CreateGhost();
-	if (ghostLevel == 0)
-		CreateGhost();
+	ghostHp = ghost.health;
+	ghostXp = ghost.damage;
 }
 
 void InventoryHUD() {
