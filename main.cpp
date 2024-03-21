@@ -63,8 +63,12 @@ int main() {
 
 	LoadGhosts();
 
-	// character creation 
+	// intro
+	std::cout << "\033[1;31mMind Games: A Haunting Escape\033[0m\n\n";
+	std::cout << "You wake up in the ancient, haunted mansion nestled deep within the forest.Looking around after a while, you start realizing you are trapped inside by a mysterious force.The only hope of escape lies in unraveling the secrets of the mansion and helping the restless spirits find peace.\n\n";
+	std::cout << "Now you must navigate through the mansion's dark corridors, solving puzzles and confronting the ghosts of its past. To break the curse and escape the mansion, you must use the key items they find along the way.\n\n";
 
+	// character creation 
 	std::cout << "Enter Character's Name: ";
 	std::cin >> name;
 
