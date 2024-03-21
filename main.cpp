@@ -14,9 +14,12 @@ void Combat();
 void CombatHUD();
 void Moving();
 void CreateGhost();
+void CreateItem();
 void LevelUp();
 void InventoryHUD();
 void LoadGhosts();
+void NewRoom();
+void GameEnd();
 
 struct Ghost
 {
@@ -24,6 +27,7 @@ struct Ghost
 	int health;
 	int damage;
 	std::string dialogue;
+	std::string item;
 };
 
 struct GhostsData
@@ -36,12 +40,19 @@ std::string currentGhost;
 int ghostHp = 0;
 int ghostXp = 0;
 int ghostLevel = 0;
+std::string ghostDialogue;
+std::string ghostItem;
+int ghostId;
+
+bool isItemsLeft = true; //false if all 5 items are in the player's inventory
 
 std::string name = "", race = "", sex = "";
 int level = 0, xp = 0, health = 0, totalHealth = 0, maxHealth = 0, nextLevel, heal = 0;
 Inventory inventory;
 
 std::vector<std::string> playerRace = { "elf", "dwarf", "goblin", "human" }; 
+std::vector<std::string> itemsAvailable = { "Candle", "Soldier Badge", "Teddy Bear", "Cat Pendant", "Torn Page"};
+std::vector<std::string> ghostsAvailable = { "Spirit of Shadows" , "Evil Echo", "Phantom", "Witch", "Demon"};
 
 int main() {
 	level = 1;
@@ -110,7 +121,6 @@ int main() {
 	maxHealth = totalHealth;
 
 	inventory.addItem("Sword");
-	inventory.addItem("Leather Boots");
 	
 	HUD();
 	Moving();
@@ -126,6 +136,7 @@ void LoadGhosts() {
 	struct_mapping::reg(&Ghost::health, "health");
 	struct_mapping::reg(&Ghost::damage, "damage");
 	struct_mapping::reg(&Ghost::dialogue, "dialogue");
+	struct_mapping::reg(&Ghost::item, "item");
 	struct_mapping::reg(&GhostsData::ghosts, "ghosts");
 
 	std::ifstream json_data("ghosts.json");
@@ -147,6 +158,10 @@ void HUD() {
 	std::cout << "Name: " << name << "      Health: " << totalHealth << "\nRace: " << race
 		<< "\nSex: " << sex << "\nLevel: " << level << "\nXP: " << xp << "\nXP to Level: " << nextLevel << std::endl;
 	InventoryHUD();
+
+	if (ghostsAvailable.empty()) {
+		GameEnd();
+	}
 	Moving();
 }
 
@@ -155,7 +170,9 @@ void CombatHUD() {
 	system("cls");
 	std::cout << "Name: " << name << "		| Ghost Name: " << currentGhost << "\nHealth:  " << totalHealth << "	| Ghost Health: " <<
 		ghostHp << "\nLevel: " << level << "	| Ghost Level: " << ghostLevel << std::endl;
-	//InventoryHUD();
+	InventoryHUD();
+	std::cout << "\n";
+	std::cout << ghostDialogue << "\n\n";
 }
 
 void Combat() {
@@ -171,6 +188,9 @@ void Combat() {
 		std::cout << "1.Attack\n";
 		std::cout << "2.Block\n";
 		std::cout << "3.Run\n";
+		if (inventory.hasItem(ghostItem)) { // not called every time it should be
+			std::cout << "4.Use " << ghostItem << std::endl;
+		}
 		std::cout << "\n";
 		std::cin >> playerAttack;
 
@@ -200,7 +220,7 @@ void Combat() {
 		
 				LevelUp();
 				std::cout << "\n";
-				std::cout << "You defeated " << currentGhost << ". You have been rewarded with " << ghostXp << "XP.\nGood job!";
+				std::cout << "You fought off the " << currentGhost << ". You have been rewarded with " << ghostXp << "XP.\nGood job!";
 				Sleep(3000);
 				HUD();
 			} 
@@ -246,6 +266,19 @@ void Combat() {
 				Combat();
 			}
 		}
+		//Item
+		else if (playerAttack == 4) {
+			std::cout << "You use the " << ghostItem << ".\n";
+			inventory.removeItem(ghostItem);
+			std::cout << "The ghost thanks you. \n";
+
+			LevelUp();
+			std::cout << "\n";
+			std::cout << "You freed the " << currentGhost << ". You have been rewarded with " << ghostXp << "XP.\nGood job!";
+			ghostsAvailable.erase(std::next(ghostsAvailable.begin(), ghostId));
+			Sleep(3000);
+			HUD();
+		}
 
 		if (totalHealth <= 1) {
 			system("cls");
@@ -266,7 +299,7 @@ void Combat() {
 		HUD();
 		LevelUp();
 		std::cout << "\n";
-		std::cout << "You defeated " << currentGhost << ". You have been rewarded with " << ghostXp << " XP.\nGood job!";
+		std::cout << "You fought off " << currentGhost << ". You have been rewarded with " << ghostXp << " XP.\nGood job!";
 		Sleep(3000);
 	}
 	
@@ -286,70 +319,36 @@ void Moving() {
 	std::cin >> choice;
 
 	if (choice == 1) {
-		int temp = rand() % 100 + 1;
-		std::cout << "You start moving forward...\n";
-		if (temp >= 50) {
-			// Encounter a Ghost
-			CreateGhost();
-			std::cout << "A " << currentGhost << "! Prepare to fight!\n";
-			Sleep(1000);
-			Combat();
-
-		}
+		std::cout << "You start moving forwards...\n";
+		NewRoom();
 
 		std::cout << "You found nothing\n";
 		Sleep(1000);
 		HUD();
-
 	}
 	else if (choice == 2) {
-		int temp = rand() % 100 + 1;
 		std::cout << "You start moving backwards...\n";
-		if (temp >= 50) {
-			// Encounter a Ghost
-			CreateGhost();
-			std::cout << "A " << currentGhost << "! Prepare to fight!\n";
-			Sleep(1000);
-			Combat();
-		}
+		NewRoom();
 
 		std::cout << "You found nothing\n";
 		Sleep(1000);
 		HUD();
-
 	}
 	else if (choice == 3) {
-		int temp = rand() % 100 + 1;
 		std::cout << "You start moving to the right...\n";
-		if (temp >= 50) {
-			// Encounter a Ghost
-			CreateGhost();
-			std::cout << "A " << currentGhost << "! Prepare to fight!\n";
-			Sleep(1000);
-			Combat();
-		}
+		NewRoom();
 
 		std::cout << "You found nothing\n";
 		Sleep(1000);
 		HUD();
-
 	}
 	else if (choice == 4) {
-
-		int temp = rand() % 100 + 1;
 		std::cout << "You start moving to the left...\n";
-		if (temp >= 50) {
-			// Encounter a Ghost
-			CreateGhost();
-			std::cout << "A " << currentGhost << "! Prepare to fight!\n";
-			Sleep(1000);
-			Combat();
-		}
+		NewRoom();
 
 		std::cout << "You found nothing\n";
 		Sleep(1000);
 		HUD();
-
 	}
 	else if (choice == 5) {
 		std::cout << "It is time to rest in the closest corner.\n";
@@ -390,9 +389,68 @@ void CreateGhost() {
 	ghostLevel = (rand() % 3) + level;
 	ghostHp = ghost.health;
 	ghostXp = ghost.damage;
+	ghostDialogue = ghost.dialogue;
+	ghostItem = ghost.item;
 }
 
 void InventoryHUD() {
 
 	inventory.showInventory();
+}
+
+void CreateItem() {
+	if (itemsAvailable.empty()) {
+		isItemsLeft = false;
+		return;
+	}
+	int itemID = rand() % itemsAvailable.size();
+
+	std::string roomItem = itemsAvailable[itemID];
+	std::cout << "You find a " << roomItem << ". Do you want to pick it up?"<< std::endl;
+
+	int choice;
+	std::cout << "\n\n";
+	std::cout << "1. Pick up the item \n";
+	std::cout << "2. Leave the item \n";
+	std::cout << "\n\n";
+	Sleep(500);
+
+	std::cin >> choice;
+	if (choice == 1) {
+		inventory.addItem(roomItem);
+		std::cout << "You pick up the " << roomItem << std::endl;
+		itemsAvailable.erase(std::next(itemsAvailable.begin(), itemID));
+	}
+	HUD();
+}
+
+void NewRoom() {
+	int temp = rand() % 100 + 1;
+	if (isItemsLeft) {
+		if (temp <= 30) {
+			// Find Item
+			CreateItem();
+		}
+		if (temp >= 60) {
+			// Encounter a Ghost
+			CreateGhost();
+			std::cout << "A " << currentGhost << "! Prepare to fight!\n";
+			Sleep(1000);
+			Combat();
+		}
+	}
+	else {
+		if (temp >= 50) {
+			// Encounter a Ghost
+			CreateGhost();
+			std::cout << "A " << currentGhost << "! Prepare to fight!\n";
+			Sleep(1000);
+			Combat();
+		}
+	}
+
+}
+
+void GameEnd() {
+	//text here
 }

@@ -19,6 +19,7 @@ public:
 	void removeItem(std::string item);
 	void showInventory();
 	bool isEmpty();
+    bool hasItem(std::string);
 };
 
 Inventory& Inventory::addItem(std::string item)
@@ -93,6 +94,22 @@ void Inventory::showInventory()
 bool Inventory::isEmpty()
 {
     return first == nullptr;
+}
+
+bool Inventory::hasItem(std::string itemName) {
+    if (first == nullptr) { // no first item
+        return false;
+    }
+    Item* current = first;
+    while (current != nullptr){ 
+        if (current->itemName != itemName) { // no match
+            current = current->_pNext;
+        }
+        else { //not null, match found
+            return true;
+        }
+    }
+    return false;
 }
 
 //Inventory::Item::Item()

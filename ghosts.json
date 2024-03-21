@@ -5,35 +5,40 @@
       "health": 30,
       "damage": 10,
       "defense": 5,
-      "dialogue": "Hey there, you lost soul. It’s dangerous around here. You must to find a key to get out of here."
+      "dialogue": "The darkness deepens with your each step, seeking any light or soul to put out.",
+      "item": "Candle"
     },
     {
-      "name": "Evil Echo",
-      "health": 35,
-      "damage": 15,
-      "defense": 8,
-      "dialogue": "Your footsteps echo through these empty halls, a prelude to your inevitable demise."
+        "name": "Evil Echo",
+        "health": 35,
+        "damage": 15,
+        "defense": 8,
+        "dialogue": "A marching soldier appears, continuing a battle lost years ago. You, as it happens, look an awful lot like an enemy.",
+        "item": "Soldier Badge"
     },
     {
-      "name": "Phantom",
-      "health": 40,
-      "damage": 8,
-      "defense": 2,
-      "dialogue": "You'll join us in eternal darkness!"
+        "name": "Phantom",
+        "health": 40,
+        "damage": 8,
+        "defense": 2,
+        "dialogue": "Distorted laughter surrounds you, heralding the arrival of a disfigured child intent on you sharing her fate.",
+        "item": "Teddy Bear"
     },
     {
-      "name": "Witch",
-      "health": 30,
-      "damage": 8,
-      "defense": 2,
-      "dialogue": "The spirits of this house hunger for company, but they crave souls, not flesh."
+        "name": "Witch",
+        "health": 30,
+        "damage": 8,
+        "defense": 2,
+        "dialogue": "The air crackles with magic, your body choking up at the hostility eating at you with every breath.",
+        "item": "Cat Pendant"
     },
     {
-      "name": "Demon",
-      "health": 50,
-      "damage": 10,
-      "defense": 3,
-      "dialogue": "You dare to disturb the slumber of the damned? Prepare to face the consequences, mortal."
+        "name": "Demon",
+        "health": 50,
+        "damage": 10,
+        "defense": 3,
+        "dialogue": "A remnant of a pact unfulfilled, a goat-headed demon guards a tome. Its gaze burns your soul.",
+        "item": "Torn Page"
     }
   ]
 }
