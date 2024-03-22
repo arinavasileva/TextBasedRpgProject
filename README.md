@@ -19,7 +19,7 @@ Welcome to **Mind Games: A Haunting Escape**, a text-based adventure game where 
 - **Linked List**: Used to implement the inventory system, allowing for efficient insertion and removal of items.
 - **Map**: Used for mapping JSON data to ghost structures during initialization.
 
-## Example from the Code
+## Examples from the Code
 
 **Example for Structs:**
 
