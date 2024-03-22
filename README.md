@@ -1,7 +1,3 @@
-Certainly! Below is a formatted version of the readme file:
-
----
-
 # Mind Games: A Haunting Escape
 
 Welcome to **Mind Games: A Haunting Escape**, a text-based adventure game where you find yourself trapped in an ancient, haunted mansion. Your only chance of escape lies in unraveling the secrets of the mansion and helping the restless spirits find peace.
@@ -20,10 +16,12 @@ Welcome to **Mind Games: A Haunting Escape**, a text-based adventure game where 
 
 - **Structs**: Utilized for representing entities like ghosts and their attributes such as name, health, damage, dialogue, and associated items.
 - **Vectors**: Employed for storing lists of ghosts, available player races, items, and ghosts encountered.
-- **Map**: Used for mapping JSON data to ghost structures during initialization.
 - **Linked List**: Used to implement the inventory system, allowing for efficient insertion and removal of items.
+- **Map**: Used for mapping JSON data to ghost structures during initialization.
 
 ## Example from the Code
+
+**Example for Structs:**
 
 ```cpp
 struct Ghost {
@@ -40,6 +38,19 @@ std::vector<std::string> itemsAvailable = { "Candle", "Soldier Badge", "Teddy Be
 ```
 
 This snippet defines the `Ghost` struct and initializes vectors for storing ghosts, player races, and available items.
+
+**Example for Vectors:**
+
+```cpp
+// Example usage of vectors
+std::vector<std::string> playerRace = { "elf", "dwarf", "goblin", "human" }; 
+std::vector<std::string> itemsAvailable = { "Candle", "Soldier Badge", "Teddy Bear", "Cat Pendant", "Torn Page"};
+std::vector<std::string> ghostsAvailable = { "Spirit of Shadows" , "Evil Echo", "Phantom", "Witch", "Demon"};
+```
+
+In this snippet, three vectors (`playerRace`, `itemsAvailable`, and `ghostsAvailable`) are declared and initialized with strings representing player races, available items, and available ghosts, respectively.
+
+**Example for Linked Lists:**
 
 Here's a crucial snippet from the inventory header, focusing on the declaration of the `Inventory` class along with its public member functions:
 
@@ -77,6 +88,47 @@ In this snippet:
 
 This snippet encapsulates the functionality of the inventory system, allowing for manipulation and management of items within the game.
 
+**Example for Map:**
+
+In the `main` function, the `struct_mapping` library is used to map JSON data to C++ structures. Here's an example snippet demonstrating its usage:
+
+```cpp
+void LoadGhosts() {
+    struct_mapping::reg(&Ghost::name, "name");
+    struct_mapping::reg(&Ghost::health, "health");
+    struct_mapping::reg(&Ghost::damage, "damage");
+    struct_mapping::reg(&Ghost::dialogue, "dialogue");
+    struct_mapping::reg(&Ghost::item, "item");
+    struct_mapping::reg(&GhostsData::ghosts, "ghosts");
+
+    std::ifstream json_data("ghosts.json");
+
+    if (json_data) {
+        GhostsData data;
+
+        struct_mapping::map_json_to_struct(data, json_data);
+        ghosts = data.ghosts;
+
+        json_data.close();
+    }
+}
+
+int main() {
+    // Other code...
+
+    LoadGhosts();
+
+    // Other code...
+}
+```
+
+In this example:
+- The `LoadGhosts` function is responsible for loading ghost data from a JSON file.
+- `struct_mapping::reg` is used to register the mapping between JSON keys and C++ struct members.
+- `struct_mapping::map_json_to_struct` is used to parse the JSON data from the file into the `GhostsData` structure.
+
+This approach allows for seamless conversion of JSON data into C++ structures, facilitating easier handling and manipulation of the ghost data within the program.
+
 ## Gameplay Example
 
 **Character Creation:**
@@ -104,7 +156,7 @@ A Spirit of Shadows! Prepare to fight!
 
 Name: Alice		| Ghost Name: Spirit of Shadows
 Health:  100	| Ghost Health: 80
-Level: 1	| Ghost Level: 2
+Level: 1	    | Ghost Level: 2
 
 1.Attack
 2.Block
@@ -126,7 +178,7 @@ Attacking...You did 3000 to the Spirit of Shadows
 
 Name: Alice		| Ghost Name: Spirit of Shadows
 Health:  100	| Ghost Health: 50
-Level: 1	| Ghost Level: 2
+Level: 1	    | Ghost Level: 2
 
 Ghost is Attacking you...
 You suffered (-30 points) 70
