@@ -21,6 +21,7 @@ Welcome to **Mind Games: A Haunting Escape**, a text-based adventure game where 
 - **Structs**: Utilized for representing entities like ghosts and their attributes such as name, health, damage, dialogue, and associated items.
 - **Vectors**: Employed for storing lists of ghosts, available player races, items, and ghosts encountered.
 - **Map**: Used for mapping JSON data to ghost structures during initialization.
+- **Linked List**: Used to implement the inventory system, allowing for efficient insertion and removal of items.
 
 ## Example from the Code
 
@@ -39,6 +40,42 @@ std::vector<std::string> itemsAvailable = { "Candle", "Soldier Badge", "Teddy Be
 ```
 
 This snippet defines the `Ghost` struct and initializes vectors for storing ghosts, player races, and available items.
+
+Here's a crucial snippet from the inventory header, focusing on the declaration of the `Inventory` class along with its public member functions:
+
+```cpp
+class Inventory {
+private:
+    class Item {
+    public:
+        std::string itemName;
+        Item* _pNext;
+    };
+
+    Item* first;
+    Item* last;
+
+public:
+    Inventory& addItem(std::string item);
+    void removeItem(std::string item);
+    void showInventory();
+    bool isEmpty();
+    bool hasItem(std::string);
+};
+```
+
+In this snippet:
+
+- `Inventory` is a class representing the player's inventory.
+- It contains a private nested class `Item`, representing individual items stored in the inventory.
+- The `Inventory` class provides public member functions:
+  - `addItem`: Adds an item to the inventory.
+  - `removeItem`: Removes an item from the inventory.
+  - `showInventory`: Displays the contents of the inventory.
+  - `isEmpty`: Checks if the inventory is empty.
+  - `hasItem`: Checks if a specific item is present in the inventory.
+
+This snippet encapsulates the functionality of the inventory system, allowing for manipulation and management of items within the game.
 
 ## Gameplay Example
 
